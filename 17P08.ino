@@ -48,7 +48,7 @@ void loop()
   last_loop_time += LOOP_INTERVAL;
 
   a_value = analogRead(PIN_IR);
-  dist_raw = ((6762.0 / (a_value - 9.0)) - 4.0) * 10.0;
+  dist_raw = ((6762.0 / (a_value - 9.0)) - 4.0) * 10.0 - 60.0;
 
   //if ... // Put range Filter code here (_DIST_MIN ~ _DIST_MAX)
   // and turn on LED if the distance is in the range 
