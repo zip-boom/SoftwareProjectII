@@ -6,23 +6,23 @@
 #define PIN_IR    A0
 
 // Event interval parameters
-#define _INTERVAL_DIST    ??? // distance sensor interval (unit: ms)
-#define _INTERVAL_SERVO   ??? // servo interval (unit: ms)
-#define _INTERVAL_SERIAL  ??? // serial interval (unit: ms)
+#define _INTERVAL_DIST    2 // distance sensor interval (unit: ms)
+#define _INTERVAL_SERVO   2 // servo interval (unit: ms)
+#define _INTERVAL_SERIAL  2 // serial interval (unit: ms)
 
 // EMA filter configuration for the IR distance sensor
-#define _EMA_ALPHA ???    // EMA weight of new sample (range: 0 to 1)
+#define _EMA_ALPHA 0.1    // EMA weight of new sample (range: 0 to 1)
                           // Setting EMA to 1 effectively disables EMA filter.
 
 // Servo adjustment - Set _DUTY_MAX, _NEU, _MIN with your own numbers
-#define _DUTY_MAX ??? // 2000
-#define _DUTY_NEU ??? // 1500
-#define _DUTY_MIN ??? // 1000
+#define _DUTY_MAX 2167 // 2000
+#define _DUTY_NEU 1500 // 1500
+#define _DUTY_MIN 833 // 1000
 
-#define _SERVO_ANGLE_DIFF  ???  // Replace with |D - E| degree
-#define _SERVO_SPEED       ???  // servo speed
+#define _SERVO_ANGLE_DIFF  120  // Replace with |D - E| degree
+#define _SERVO_SPEED       400  // servo speed
 
-#define _BANGBANG_RANGE    ???  // duty up and down for bangbang control
+#define _BANGBANG_RANGE    200  // duty up and down for bangbang control
 
 // Target Distance
 #define _DIST_TARGET    175 // Center of the rail (unit:mm)
@@ -54,7 +54,7 @@ void setup()
   myservo.writeMicroseconds(duty_current);
 
   // initialize serial port
-  Serial.begin(???);  
+  Serial.begin(1000000);  
     
   // convert angular speed into duty change per interval.
   duty_change_per_interval = 
@@ -84,7 +84,7 @@ void loop()
     event_dist = false;
 
     // get a distance reading from the distance sensor
-    dist_filtered = volt_to_distance(ir_sensor_filtered(???, ???, 0));
+    dist_filtered = volt_to_distance(ir_sensor_filtered(10, 0.5, 0));
     dist_ema = _EMA_ALPHA * dist_filtered + (1.0 - _EMA_ALPHA) * dist_ema;
 
     // bang bang control
@@ -136,7 +136,7 @@ float volt_to_distance(int a_value)
 {
   // Replace line into your own equation
   // return (6762.0 / (a_value - 9) - 4.0) * 10.0; 
-  return ???;
+  return (924 + -4.47*a_value + 0.00764*pow(a_value, 2) + -0.00000456*pow(a_value, 3));
 }
 
 int compare(const void *a, const void *b) {
